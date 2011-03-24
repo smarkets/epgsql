@@ -1,4 +1,5 @@
 *.beam
 *.boot
 *.script
-ebin/*.app
+.eunit/*
+doc/*
