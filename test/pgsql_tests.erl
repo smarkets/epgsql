@@ -3,7 +3,7 @@
 -export([run_tests/0]).
 
 -include_lib("eunit/include/eunit.hrl").
--include_lib("ssl/include/OTP-PKIX.hrl").
+-include_lib("public_key/include/public_key.hrl").
 -include("pgsql.hrl").
 
 -define(host, "localhost").
@@ -57,11 +57,12 @@ connect_with_ssl_test() ->
       [{ssl, true}]).
 
 connect_with_client_cert_test() ->
-    lists:foreach(fun application:start/1, [crypto, ssl]),
+    lists:foreach(fun application:start/1, [public_key, crypto, ssl]),
 
-    Dir = filename:join(filename:dirname(code:which(pgsql_tests)), "../test_data"),
+    Dir = filename:join(filename:dirname(code:which(pgsql_tests)), "../priv"),
     File = fun(Name) -> filename:join(Dir, Name) end,
-    {ok, [{cert, Der, _}]} = public_key:pem_to_der(File("epgsql.crt")),
+    {ok, CertBin} = file:read_file(File("epgsql.crt")),
+    {ok, [{cert, Der, _}]} = pubkey_pem:decode(CertBin),
     {ok, Cert} = public_key:pkix_decode_cert(Der, plain),
     #'TBSCertificate'{serialNumber = Serial} = Cert#'Certificate'.tbsCertificate,
     Serial2 = list_to_binary(integer_to_list(Serial)),

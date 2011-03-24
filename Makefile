@@ -22,3 +22,5 @@ docs:
 
 dialyzer: compile
 	@dialyzer -Wno_return -c ebin
+
+test: compile eunit
