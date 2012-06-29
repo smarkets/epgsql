@@ -1,6 +1,6 @@
 {application, epgsql,
  [{description, "PostgreSQL Client"},
-  {vsn, "1.4"},
+  {vsn, git},
   {registered, []},
   {applications, [kernel, stdlib, public_key, crypto, ssl]},
   {included_applications, []}]}.
